@@ -1,0 +1,26 @@
+# Dependency directories
+node_modules/
+package-lock.json
+
+# Built output
+dist/
+build/
+out/
+
+# Environment variables file
+.env
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Log files
+*.log
+
+# macOS specific files
+.DS_Store
+.vercel
+
+
+yarn.lock

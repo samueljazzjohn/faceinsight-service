@@ -24,3 +24,6 @@ out/
 
 
 yarn.lock
+
+# certificates
+/certificates

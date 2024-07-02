@@ -11,11 +11,9 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: ['*'],
-  credentials: true,
+  origin: ['*','https://app.localhost','https://93c5-59-89-204-90.ngrok-free.app'],
+  credentials: false,
 }));
-
-import indexRouter from './router/index';
 
 
 app.use(logger('dev'));
@@ -24,11 +22,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Import routers
+import indexRouter from './router/index';
+import facebookRouter from './router/facebook';
 
+// Set up routes
 app.use('/v1', indexRouter);
+app.use('/v1/facebook', facebookRouter);
 
-
+// Start the server
 app.listen(envData.app.port, () => {
   console.log(`Server listening on port ${envData.app.port}`);
 });
-

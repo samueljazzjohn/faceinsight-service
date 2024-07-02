@@ -11,7 +11,7 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: ['*','https://app.localhost','https://93c5-59-89-204-90.ngrok-free.app'],
+  origin: ['*','https://app.localhost','https://faceinsight-dashboard.vercel.app','https://93c5-59-89-204-90.ngrok-free.app'],
   credentials: false,
 }));
 

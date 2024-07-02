@@ -2,13 +2,10 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
-import connectDB from './config/dbConfig'
 import bodyParser from 'body-parser';
 import envData from './config/appConfig'
 
 const app = express();
-
-connectDB();
 
 app.use(cors({
   origin: ['*','https://app.localhost','https://faceinsight-dashboard.vercel.app','https://93c5-59-89-204-90.ngrok-free.app'],

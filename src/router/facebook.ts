@@ -1,10 +1,11 @@
 import express from 'express';
 import axios from 'axios'
+import { facebookErrorMiddleware } from '../middleware/facebookAuth';
 
 const router = express.Router();
 
 
-router.post('/user-data', async (req, res) => {
+router.post('/user-data', facebookErrorMiddleware, async (req :any, res: any) => {
   const { accessToken } = req.body;
   try {
       const userProfile = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture&access_token=${accessToken}`);
@@ -16,8 +17,8 @@ router.post('/user-data', async (req, res) => {
 });
 
 
-router.post('/page-insights', async (req, res) => {
-  const { accessToken, userId, pageId } = req.body;
+router.post('/page-insights',facebookErrorMiddleware, async (req:any, res:any) => {
+  const { accessToken, userId, pageId,since, until } = req.body;
 
   try {
     const accountsResponse = await axios.get(`https://graph.facebook.com/${userId}/accounts?access_token=${accessToken}`);
@@ -34,14 +35,20 @@ router.post('/page-insights', async (req, res) => {
       return res.status(404).json({ error: 'Page not found or access denied' });
     }
 
-    // Fetch Page Insights using the Page Access Token
-    const insightsResponse = await axios.get(`https://graph.facebook.com/${pageId}/insights`, {
-      params: {
-        metric: 'post_reactions_like_total,page_impressions_unique,page_post_engagements,page_follows',
-        period: 'days_28',
-        access_token: pageAccessToken
-      }
-    });
+    const sinceDate = new Date(since);
+        const untilDate = new Date(until);
+        const timeDifference = (untilDate.getTime() - sinceDate.getTime()) / 1000;
+
+        // Check if the time range exceeds 93 days (8035200 seconds)
+        if (timeDifference > 8035200) {
+            return res.status(400).json({
+                error: {
+                    message: 'The time range cannot exceed 93 days',
+                }
+            });
+        }
+
+    const insightsResponse = await axios.get(`https://graph.facebook.com/v20.0/${pageId}/insights?metric=post_reactions_like_total,page_impressions_unique,page_post_engagements,page_follows&period=total_over_range&until=${until}&since=${since}&access_token=${pageAccessToken}`)
 
     // Return Page Insights data
     res.json(insightsResponse.data);
@@ -54,4 +61,5 @@ router.post('/page-insights', async (req, res) => {
     res.status(500).send('Error fetching Page Insights');
   }
 });
+
 export default router;

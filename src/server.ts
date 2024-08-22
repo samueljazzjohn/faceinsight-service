@@ -8,7 +8,7 @@ import envData from './config/appConfig'
 const app = express();
 
 app.use(cors({
-  origin: ['*','https://app.localhost','https://faceinsight-dashboard.vercel.app','https://93c5-59-89-204-90.ngrok-free.app'],
+  origin: ['*','https://app.localhost','https://faceinsight-dashboard.vercel.app','https://93c5-59-89-204-90.ngrok-free.app',"http://localhost:3000"],
   credentials: false,
 }));
 

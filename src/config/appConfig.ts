@@ -9,7 +9,7 @@ interface AppConfig {
 
 const config: AppConfig = {
   app: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 5000,
+    port: process.env.PORT ? parseInt(process.env.PORT) : 4000,
   },
 };
 

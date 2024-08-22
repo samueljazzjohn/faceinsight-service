@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios'
 import { facebookErrorMiddleware } from '../middleware/facebookAuth';
+import { updatePageActionsReactionsTotal } from '../helpers.ts/pageReactionHelper';
 
 const router = express.Router();
 
@@ -48,10 +49,12 @@ router.post('/page-insights',facebookErrorMiddleware, async (req:any, res:any) =
             });
         }
 
-    const insightsResponse = await axios.get(`https://graph.facebook.com/v20.0/${pageId}/insights?metric=post_reactions_like_total,page_impressions_unique,page_post_engagements,page_follows&period=total_over_range&until=${until}&since=${since}&access_token=${pageAccessToken}`)
+    const insightsResponse = await axios.get(`https://graph.facebook.com/v20.0/${pageId}/insights?metric=page_actions_post_reactions_like_total,page_actions_post_reactions_love_total,page_actions_post_reactions_wow_total,page_actions_post_reactions_haha_total,page_actions_post_reactions_sorry_total,,page_impressions_unique,page_post_engagements,page_follows&period=total_over_range&until=${until}&since=${since}&access_token=${pageAccessToken}`)
+
+    const insightsResponseData = updatePageActionsReactionsTotal(insightsResponse.data);
 
     // Return Page Insights data
-    res.json(insightsResponse.data);
+    res.json(insightsResponseData);
   } catch (error: any) {
     console.error('Error fetching Page Insights:', error.message);
     if (error.response) {
